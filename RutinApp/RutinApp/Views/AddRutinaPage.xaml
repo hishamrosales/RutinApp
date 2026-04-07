@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RutinApp.Views.AddRutinaPage"
+             Title="Nueva Rutina">
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="12">
+
+            <Label Text="Nombre de la rutina" FontAttributes="Bold"/>
+            <Entry Text="{Binding NombreRutina}"
+                   Placeholder="Ej. Torso-Pierna A"/>
+            <Label Text="El nombre es requerido"
+                   TextColor="Red"
+                   IsVisible="{Binding IsNombreValid, Converter={StaticResource InvertedBoolConverter}}"/>
+
+            <Button Text="Guardar"
+                    Command="{Binding SaveRutinaCommand}"
+                    IsEnabled="{Binding IsFormValid}"
+                    Margin="0,12,0,0"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

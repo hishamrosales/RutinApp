@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:RutinApp.ViewModels"
+             x:Class="RutinApp.Views.MisRutinasPage"
+             Title="Mis Rutinas">
+    <ContentPage.Content>
+        <Grid RowDefinitions="Auto, *">
+
+            <Button Grid.Row="0"
+                    Text="+ Nueva Rutina"
+                    Command="{Binding GoToAddPageCommand}"
+                    Margin="16"
+                    HorizontalOptions="End"/>
+
+            <CollectionView Grid.Row="1"
+                            ItemsSource="{Binding Rutinas}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <SwipeView>
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="Editar"
+                                               BackgroundColor="Orange"
+                                               Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RutinaViewModel}}, Path=GoToEditPageCommand}"
+                                               CommandParameter="{Binding .}"/>
+                                    <SwipeItem Text="Eliminar"
+                                               BackgroundColor="Red"
+                                               Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RutinaViewModel}}, Path=DeleteRutinaCommand}"
+                                               CommandParameter="{Binding .}"/>
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+                            <Grid Padding="16, 8">
+                                <Label Text="{Binding NombreRutina}"
+                                       FontSize="16"
+                                       FontAttributes="Bold"/>
+                            </Grid>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
