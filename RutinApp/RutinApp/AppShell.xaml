@@ -4,11 +4,19 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:RutinApp"
+    xmlns:views="clr-namespace:RutinApp.Views"
+    Shell.FlyoutBehavior="Disabled"
     Title="RutinApp">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <TabBar>
+        <Tab Title="Mis Rutinas" Icon="routine_icon.png">
+            <ShellContent
+                ContentTemplate="{DataTemplate views:MisRutinasPage}" />
+        </Tab>
+        <Tab Title="Ejercicios" Icon="exercise_icon.png">
+            <ShellContent
+                ContentTemplate="{DataTemplate views:EjerciciosPage}" />
+        </Tab>
+    </TabBar>
 
 </Shell>
