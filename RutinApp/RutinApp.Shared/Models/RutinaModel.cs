@@ -11,7 +11,7 @@ namespace RutinApp.Shared.Models
         public string NombreRutina { get; set; } = string.Empty;
         public DateTime FechaCreacion { get; set; } = DateTime.Now;
 
-        public UsuarioModel Usuario { get; set; } = new();
+        public UsuarioModel? Usuario { get; set; }
         public ICollection<RutinaDetalleModel> RutinaEjercicios { get; set; } = [];
     }
 }

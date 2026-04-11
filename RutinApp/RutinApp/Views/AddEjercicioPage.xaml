@@ -2,31 +2,97 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="RutinApp.Views.AddEjercicioPage"
-             Title="Agregar Ejercicio">
+             Title="Agregar Ejercicio"
+             BackgroundColor="{StaticResource AppBackground}">
     <ScrollView>
-        <VerticalStackLayout Padding="24" Spacing="12">
+        <VerticalStackLayout Padding="24,52,24,24" Spacing="16">
 
-            <Label Text="Nombre del ejercicio" FontAttributes="Bold"/>
+    <!-- Header -->
+    <Label Text="Nuevo Ejercicio"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}"/>
+
+    <!-- Nombre -->
+    <VerticalStackLayout Spacing="6">
+        <Label Text="Nombre"
+                       FontSize="13"
+                       TextColor="{StaticResource TextSecondary}"/>
+        <Border BackgroundColor="{StaticResource CardBackground}"
+                        StrokeThickness="0">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="12"/>
+            </Border.StrokeShape>
             <Entry Text="{Binding Nombre}"
-                   Placeholder="Ej. Press de Banca"/>
-            <Label Text="El nombre es requerido"
-                   TextColor="Red"
-                   IsVisible="{Binding IsNombreValid, Converter={StaticResource InvertedBoolConverter}}"/>
+                           Placeholder="Ej. Press de Banca"
+                           PlaceholderColor="{StaticResource TextSecondary}"
+                           TextColor="{StaticResource TextPrimary}"
+                           BackgroundColor="Transparent"/>
+        </Border>
+        <Label Text="El nombre es requerido"
+                       TextColor="#C0392B"
+                       FontSize="12"
+                       IsVisible="{Binding IsNombreValid, Converter={StaticResource InvertedBoolConverter}}"/>
+    </VerticalStackLayout>
 
-            <Label Text="Grupo muscular" FontAttributes="Bold"/>
+    <!-- Grupo Muscular -->
+    <VerticalStackLayout Spacing="6">
+        <Label Text="Grupo Muscular"
+                       FontSize="13"
+                       TextColor="{StaticResource TextSecondary}"/>
+        <Border BackgroundColor="{StaticResource CardBackground}"
+                        StrokeThickness="0">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="12"/>
+            </Border.StrokeShape>
             <Entry Text="{Binding GrupoMuscular}"
-                   Placeholder="Ej. Pecho"/>
+                           Placeholder="Ej. Pecho"
+                           PlaceholderColor="{StaticResource TextSecondary}"
+                           TextColor="{StaticResource TextPrimary}"
+                           BackgroundColor="Transparent"/>
+        </Border>
+    </VerticalStackLayout>
 
-            <Label Text="Descripción" FontAttributes="Bold"/>
+    <!-- Descripción -->
+    <VerticalStackLayout Spacing="6">
+        <Label Text="Descripción"
+                       FontSize="13"
+                       TextColor="{StaticResource TextSecondary}"/>
+        <Border BackgroundColor="{StaticResource CardBackground}"
+                        StrokeThickness="0">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="12"/>
+            </Border.StrokeShape>
             <Editor Text="{Binding Descripcion}"
-                    Placeholder="Descripción del ejercicio..."
-                    HeightRequest="100"/>
+                            Placeholder="Descripción del ejercicio..."
+                            PlaceholderColor="{StaticResource TextSecondary}"
+                            TextColor="{StaticResource TextPrimary}"
+                            BackgroundColor="Transparent"
+                            HeightRequest="120"/>
+        </Border>
+    </VerticalStackLayout>
 
-            <Button Text="Guardar"
-                    Command="{Binding SaveEjercicioCommand}"
-                    IsEnabled="{Binding IsFormValid}"
-                    Margin="0,12,0,0"/>
+    <!-- Botón Guardar -->
+    <Border Margin="0,8,0,0"
+                    StrokeThickness="0">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="12"/>
+        </Border.StrokeShape>
+        <Border.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                <GradientStop Color="#FF6B2B" Offset="0"/>
+                <GradientStop Color="#C0392B" Offset="1"/>
+            </LinearGradientBrush>
+        </Border.Background>
+        <Button Text="Guardar"
+                        Command="{Binding SaveEjercicioCommand}"
+                        IsEnabled="{Binding IsFormValid}"
+                        BackgroundColor="Transparent"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        FontSize="16"/>
+    </Border>
 
-        </VerticalStackLayout>
+    </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

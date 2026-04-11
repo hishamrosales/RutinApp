@@ -11,7 +11,7 @@ namespace RutinApp.Shared.Models
         public DateTime Fecha { get; set; } = DateTime.Now;
         public string Notas { get; set; } = string.Empty;
 
-        public UsuarioModel Usuario { get; set; } = new();
+        public UsuarioModel? Usuario { get; set; }
         public ICollection<DetalleLogModel> DetalleLogs { get; set; } = [];
     }
 }

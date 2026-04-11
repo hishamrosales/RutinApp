@@ -4,19 +4,21 @@ using Microsoft.EntityFrameworkCore;
 using RutinApp.Shared.Data;
 using RutinApp.Shared.Models;
 using RutinApp.Views;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 
 namespace RutinApp.ViewModels
 {
     public partial class RutinaViewModel : ObservableObject
     {
-        private readonly DataContext _dataContext;
+        private readonly IDbContextFactory<DataContext> _contextFactory;
+        private bool _esEdicion = false;
+        private int _rutinaEditandoId = 0;
 
         [ObservableProperty]
         private ObservableCollection<RutinaModel> _rutinas = [];
+
+        [ObservableProperty]
+        private ObservableCollection<EjercicioSeleccionModel> _ejerciciosDisponibles = [];
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IsFormValid))]
@@ -26,26 +28,77 @@ namespace RutinApp.ViewModels
         [NotifyPropertyChangedFor(nameof(IsFormValid))]
         private bool _isNombreValid = true;
 
-        public bool IsFormValid => IsNombreValid;
 
-        public RutinaViewModel(DataContext dataContext)
-        {
-            _dataContext = dataContext;
-        }
+        private bool _haInteractuado = false;
 
         partial void OnNombreRutinaChanged(string value)
         {
+            _haInteractuado = true;
             IsNombreValid = !string.IsNullOrWhiteSpace(value);
+            OnPropertyChanged(nameof(IsFormValid));
+        }
+
+        public bool IsFormValid => !_haInteractuado || (IsNombreValid && !string.IsNullOrWhiteSpace(NombreRutina));
+
+        public RutinaViewModel(IDbContextFactory<DataContext> contextFactory)
+        {
+            _contextFactory = contextFactory;
         }
 
         public async Task GetRutinasAsync()
         {
+            using var db = await _contextFactory.CreateDbContextAsync();
             Rutinas.Clear();
-            var rutinasFromDb = await _dataContext.Rutinas
+            var lista = await db.Rutinas
                 .AsNoTracking()
+                .Include(r => r.RutinaEjercicios)
                 .ToListAsync();
-            foreach (var rutina in rutinasFromDb)
-                Rutinas.Add(rutina);
+            foreach (var r in lista) Rutinas.Add(r);
+        }
+
+        public async Task GetEjerciciosDisponiblesAsync()
+        {
+            using var db = await _contextFactory.CreateDbContextAsync();
+            EjerciciosDisponibles.Clear();
+            var lista = await db.Ejercicios.AsNoTracking().ToListAsync();
+
+            List<int> idsEnRutina = [];
+            if (_esEdicion)
+            {
+                idsEnRutina = await db.RutinaEjercicios
+                    .Where(re => re.RutinaId == _rutinaEditandoId)
+                    .Select(re => re.EjercicioId)
+                    .ToListAsync();
+            }
+
+            foreach (var e in lista)
+            {
+                var seleccion = new EjercicioSeleccionModel { Ejercicio = e };
+                if (idsEnRutina.Contains(e.Id))
+                    seleccion.IsSelected = true;
+                EjerciciosDisponibles.Add(seleccion);
+            }
+        }
+
+        public void LimpiarFormulario()
+        {
+            _haInteractuado = false;
+            _esEdicion = false;
+            _rutinaEditandoId = 0;
+            _nombreRutina = string.Empty;
+            OnPropertyChanged(nameof(NombreRutina));
+            _isNombreValid = true;
+            OnPropertyChanged(nameof(IsNombreValid));
+            OnPropertyChanged(nameof(IsFormValid));
+        }
+
+        public void LoadRutinaForEdicion(RutinaModel rutina)
+        {
+            _esEdicion = true;
+            _rutinaEditandoId = rutina.Id;
+            _nombreRutina = rutina.NombreRutina;
+            OnPropertyChanged(nameof(NombreRutina));
+            IsNombreValid = true;
         }
 
         [RelayCommand]
@@ -62,57 +115,111 @@ namespace RutinApp.ViewModels
         }
 
         [RelayCommand]
-        public async Task DeleteRutina(RutinaModel rutina)
+        public async Task ShowOptions(RutinaModel rutina)
         {
             string userAnswer = await Shell.Current.DisplayActionSheetAsync(
-                "¿Estás seguro de que quieres eliminar esta rutina?",
-                "Cancelar", "Eliminar");
-            if (userAnswer == "Cancelar") return;
+                rutina.NombreRutina,
+                "Cancelar",
+                null,
+                "Editar",
+                "Eliminar");
 
-            _dataContext.Rutinas.Remove(rutina);
-            await _dataContext.SaveChangesAsync();
+            if (userAnswer == "Editar")
+                await GoToEditPage(rutina);
+
+            if (userAnswer == "Eliminar")
+                await DeleteRutina(rutina);
+        }
+
+        [RelayCommand]
+        public async Task DeleteRutina(RutinaModel rutina)
+        {
+            bool confirm = await Shell.Current.DisplayAlertAsync(
+                "Eliminar rutina",
+                $"¿Estás seguro de que quieres eliminar \"{rutina.NombreRutina}\"?",
+                "Eliminar", "Cancelar");
+            if (!confirm) return;
+
+            using var db = await _contextFactory.CreateDbContextAsync();
+            var toDelete = await db.Rutinas.FindAsync(rutina.Id);
+            if (toDelete == null) return;
+            db.Rutinas.Remove(toDelete);
+            await db.SaveChangesAsync();
             Rutinas.Remove(rutina);
         }
 
         [RelayCommand]
         public async Task SaveRutina()
         {
-            var foundRutina = await _dataContext.Rutinas
-                .FirstOrDefaultAsync(r => r.NombreRutina == this.NombreRutina);
+            if (string.IsNullOrWhiteSpace(NombreRutina)) return;
 
-            if (foundRutina != null)
+            var seleccionados = EjerciciosDisponibles.Where(e => e.IsSelected).ToList();
+
+            if (_esEdicion)
             {
-                EditRutina(foundRutina);
-                await _dataContext.SaveChangesAsync();
+                using var db = await _contextFactory.CreateDbContextAsync();
+                var rutina = await db.Rutinas.FindAsync(_rutinaEditandoId);
+                if (rutina == null) return;
+
+                rutina.NombreRutina = NombreRutina;
+
+                var anteriores = await db.RutinaEjercicios
+                    .Where(re => re.RutinaId == rutina.Id)
+                    .ToListAsync();
+                db.RutinaEjercicios.RemoveRange(anteriores);
+                await db.SaveChangesAsync();
+
+                foreach (var item in seleccionados)
+                {
+                    var detalle = new RutinaDetalleModel
+                    {
+                        RutinaId = rutina.Id,
+                        EjercicioId = item.Ejercicio.Id,
+                        Series = item.Series,
+                        Repeticiones = item.Repeticiones
+                    };
+                    db.Entry(detalle).State = EntityState.Added;
+                }
+
+                int changes = await db.SaveChangesAsync();
                 await Shell.Current.DisplayAlertAsync("Éxito", "Rutina editada correctamente", "OK");
             }
             else
             {
-                await CreateRutina();
+                using var db = await _contextFactory.CreateDbContextAsync();
+                var rutina = new RutinaModel
+                {
+                    NombreRutina = NombreRutina,
+                    FechaCreacion = DateTime.Now,
+                    UsuarioId = 1
+                };
+                db.Rutinas.Add(rutina);
+                await db.SaveChangesAsync();
+
+                foreach (var item in seleccionados)
+                {
+                    var detalle = new RutinaDetalleModel
+                    {
+                        RutinaId = rutina.Id,
+                        EjercicioId = item.Ejercicio.Id,
+                        Series = item.Series,
+                        Repeticiones = item.Repeticiones
+                    };
+                    db.Entry(detalle).State = EntityState.Added;
+                }
+
+                if (seleccionados.Any())
+                    await db.SaveChangesAsync();
             }
 
             await Shell.Current.GoToAsync("..");
         }
 
-        private async Task CreateRutina()
+        [RelayCommand]
+        public async Task IniciarSesion(RutinaModel rutina)
         {
-            var rutina = new RutinaModel
-            {
-                NombreRutina = this.NombreRutina,
-                FechaCreacion = DateTime.Now
-            };
-            _dataContext.Rutinas.Add(rutina);
-            await _dataContext.SaveChangesAsync();
-        }
-
-        private void EditRutina(RutinaModel rutina)
-        {
-            rutina.NombreRutina = this.NombreRutina;
-        }
-
-        public void LoadRutinaForEdition(RutinaModel rutina)
-        {
-            NombreRutina = rutina.NombreRutina;
+            await Shell.Current.GoToAsync(nameof(SesionPage),
+                new Dictionary<string, object> { ["Rutina"] = rutina });
         }
     }
 }

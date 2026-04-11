@@ -3,48 +3,87 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:RutinApp.ViewModels"
              x:Class="RutinApp.Views.EjerciciosPage"
-             Title="Ejercicios">
-    <ContentPage.Content>
-        <Grid RowDefinitions="Auto, *">
+             Title="Ejercicios"
+             BackgroundColor="{StaticResource AppBackground}">
+    <Grid RowDefinitions="Auto, Auto, *">
 
-            <Button Grid.Row="0"
-                    Text="+ Agregar Ejercicio"
+        <!-- Header -->
+        <Grid Grid.Row="0" Padding="24,52,24,8" ColumnDefinitions="*, Auto">
+            <Label Grid.Column="0"
+                   Text="Ejercicios"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}"/>
+            <Button Grid.Column="1"
+                    Text="+"
+                    FontSize="24"
+                    TextColor="{StaticResource AccentOrange}"
+                    BackgroundColor="Transparent"
                     Command="{Binding GoToAddPageCommand}"
-                    Margin="16"
-                    HorizontalOptions="End"/>
-
-            <CollectionView Grid.Row="1"
-                            ItemsSource="{Binding Ejercicios}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <SwipeView>
-                            <SwipeView.RightItems>
-                                <SwipeItems>
-                                    <SwipeItem Text="Editar"
-                                               BackgroundColor="Orange"
-                                               Command="{Binding Source={RelativeSource AncestorType={x:Type vm:EjercicioViewModel}}, Path=GoToEditPageCommand}"
-                                               CommandParameter="{Binding .}"/>
-                                    <SwipeItem Text="Eliminar"
-                                               BackgroundColor="Red"
-                                               Command="{Binding Source={RelativeSource AncestorType={x:Type vm:EjercicioViewModel}}, Path=DeleteEjercicioCommand}"
-                                               CommandParameter="{Binding .}"/>
-                                </SwipeItems>
-                            </SwipeView.RightItems>
-                            <Grid Padding="16, 8" ColumnDefinitions="*, Auto">
-                                <VerticalStackLayout Grid.Column="0">
-                                    <Label Text="{Binding Nombre}"
-                                           FontSize="16"
-                                           FontAttributes="Bold"/>
-                                    <Label Text="{Binding GrupoMuscular}"
-                                           FontSize="13"
-                                           TextColor="Gray"/>
-                                </VerticalStackLayout>
-                            </Grid>
-                        </SwipeView>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-
+                    VerticalOptions="Center"/>
         </Grid>
-    </ContentPage.Content>
+
+        <!-- Buscador -->
+        <Border Grid.Row="1"
+                Margin="24,0,24,16"
+                BackgroundColor="{StaticResource CardBackground}"
+                StrokeThickness="0">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="12"/>
+            </Border.StrokeShape>
+            <SearchBar Placeholder="Buscar"
+                       PlaceholderColor="{StaticResource TextSecondary}"
+                       TextColor="{StaticResource TextPrimary}"
+                       BackgroundColor="Transparent"/>
+        </Border>
+
+        <!-- Lista de ejercicios -->
+        <CollectionView Grid.Row="2"
+                        ItemsSource="{Binding Ejercicios}"
+                        Margin="24,0,24,0">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border BackgroundColor="{StaticResource CardBackground}"
+                StrokeThickness="0"
+                Padding="16"
+                Margin="0,0,0,12">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16"/>
+                        </Border.StrokeShape>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer
+                    Buttons="Secondary"
+                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:EjercicioViewModel}}, Path=ShowOptionsCommand}"
+                    CommandParameter="{Binding .}"/>
+                        </Border.GestureRecognizers>
+
+                        <Grid ColumnDefinitions="Auto, *">
+                            <BoxView Grid.Column="0"
+                         WidthRequest="4"
+                         HeightRequest="40"
+                         BackgroundColor="{StaticResource AccentOrange}"
+                         CornerRadius="2"
+                         Margin="0,0,12,0"
+                         VerticalOptions="Center"/>
+
+                            <VerticalStackLayout Grid.Column="1" Spacing="4">
+                                <Label Text="{Binding Nombre}"
+                           FontSize="15"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}"/>
+                                <Label Text="{Binding GrupoMuscular}"
+                           FontSize="12"
+                           TextColor="{StaticResource AccentOrange}"/>
+                                <Label Text="{Binding Descripcion}"
+                           FontSize="12"
+                           TextColor="{StaticResource TextSecondary}"
+                           LineBreakMode="TailTruncation"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
 </ContentPage>
