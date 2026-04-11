@@ -12,7 +12,7 @@ namespace RutinApp.Shared.Models
         public int PesoUtilizado { get; set; }
         public int RepsLogradas { get; set; }
 
-        public HistorialEntrenamientoModel Historial { get; set; } = new();
-        public EjercicioModel Ejercicio { get; set; } = new();
+        public HistorialEntrenamientoModel? Historial { get; set; }
+        public EjercicioModel? Ejercicio { get; set; }
     }
 }

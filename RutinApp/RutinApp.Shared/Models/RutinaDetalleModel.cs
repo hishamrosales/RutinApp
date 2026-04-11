@@ -11,7 +11,7 @@ namespace RutinApp.Shared.Models
         public int Series { get; set; }
         public int Repeticiones { get; set; }
 
-        public RutinaModel Rutina { get; set; } = new();
-        public EjercicioModel Ejercicio { get; set; } = new();
+        public RutinaModel? Rutina { get; set; }
+        public EjercicioModel? Ejercicio { get; set; }
     }
 }

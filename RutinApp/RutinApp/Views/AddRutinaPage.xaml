@@ -2,21 +2,137 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="RutinApp.Views.AddRutinaPage"
-             Title="Nueva Rutina">
+             Title="Nueva Rutina"
+             BackgroundColor="{StaticResource AppBackground}">
     <ScrollView>
-        <VerticalStackLayout Padding="24" Spacing="12">
+        <VerticalStackLayout Padding="24,52,24,24" Spacing="16">
 
-            <Label Text="Nombre de la rutina" FontAttributes="Bold"/>
-            <Entry Text="{Binding NombreRutina}"
-                   Placeholder="Ej. Torso-Pierna A"/>
-            <Label Text="El nombre es requerido"
-                   TextColor="Red"
-                   IsVisible="{Binding IsNombreValid, Converter={StaticResource InvertedBoolConverter}}"/>
+            <!-- Header -->
+            <Label Text="Nueva Rutina"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}"/>
 
-            <Button Text="Guardar"
-                    Command="{Binding SaveRutinaCommand}"
-                    IsEnabled="{Binding IsFormValid}"
-                    Margin="0,12,0,0"/>
+            <!-- Nombre -->
+            <VerticalStackLayout Spacing="6">
+                <Label Text="Nombre de la Rutina"
+                       FontSize="13"
+                       TextColor="{StaticResource TextSecondary}"/>
+                <Border BackgroundColor="{StaticResource CardBackground}"
+                        StrokeThickness="0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="12"/>
+                    </Border.StrokeShape>
+                    <Entry Text="{Binding NombreRutina}"
+                           Placeholder="Ej. Torso-Pierna A"
+                           PlaceholderColor="{StaticResource TextSecondary}"
+                           TextColor="{StaticResource TextPrimary}"
+                           BackgroundColor="Transparent"/>
+                </Border>
+                <Label Text="El nombre es requerido"
+                       TextColor="#C0392B"
+                       FontSize="12"
+                       IsVisible="{Binding IsNombreValid, Converter={StaticResource InvertedBoolConverter}}"/>
+            </VerticalStackLayout>
+
+            <!-- Ejercicios disponibles -->
+            <Label Text="Selecciona los ejercicios"
+                   FontSize="16"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}"/>
+
+            <CollectionView ItemsSource="{Binding EjerciciosDisponibles}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border BackgroundColor="{StaticResource CardBackground}"
+                                StrokeThickness="0"
+                                Padding="16"
+                                Margin="0,0,0,10">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12"/>
+                            </Border.StrokeShape>
+
+                            <VerticalStackLayout Spacing="10">
+
+                                <!-- Fila selección -->
+                                <Grid ColumnDefinitions="*, Auto">
+                                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                        <Label Text="{Binding Ejercicio.Nombre}"
+                                               FontSize="15"
+                                               FontAttributes="Bold"
+                                               TextColor="{StaticResource TextPrimary}"/>
+                                        <Label Text="{Binding Ejercicio.GrupoMuscular}"
+                                               FontSize="12"
+                                               TextColor="{StaticResource AccentOrange}"/>
+                                    </VerticalStackLayout>
+                                    <CheckBox Grid.Column="1"
+                                              IsChecked="{Binding IsSelected}"
+                                              Color="{StaticResource AccentOrange}"/>
+                                </Grid>
+
+                                <!-- Series y Reps (solo si está seleccionado) -->
+                                <Grid ColumnDefinitions="*, *"
+                                      ColumnSpacing="12"
+                                      IsVisible="{Binding IsSelected}">
+                                    <VerticalStackLayout Grid.Column="0" Spacing="4">
+                                        <Label Text="Series"
+                                               FontSize="12"
+                                               TextColor="{StaticResource TextSecondary}"/>
+                                        <Border BackgroundColor="#1C1C2E"
+                                                StrokeThickness="0">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="8"/>
+                                            </Border.StrokeShape>
+                                            <Entry Text="{Binding Series}"
+                                                   Keyboard="Numeric"
+                                                   TextColor="{StaticResource TextPrimary}"
+                                                   BackgroundColor="Transparent"
+                                                   HorizontalTextAlignment="Center"/>
+                                        </Border>
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="4">
+                                        <Label Text="Repeticiones"
+                                               FontSize="12"
+                                               TextColor="{StaticResource TextSecondary}"/>
+                                        <Border BackgroundColor="#1C1C2E"
+                                                StrokeThickness="0">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="8"/>
+                                            </Border.StrokeShape>
+                                            <Entry Text="{Binding Repeticiones}"
+                                                   Keyboard="Numeric"
+                                                   TextColor="{StaticResource TextPrimary}"
+                                                   BackgroundColor="Transparent"
+                                                   HorizontalTextAlignment="Center"/>
+                                        </Border>
+                                    </VerticalStackLayout>
+                                </Grid>
+
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Botón Guardar -->
+            <Border Margin="0,8,0,0" StrokeThickness="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="#FF6B2B" Offset="0"/>
+                        <GradientStop Color="#C0392B" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Button Text="Guardar"
+                        Command="{Binding SaveRutinaCommand}"
+                        IsEnabled="True"
+                        BackgroundColor="Transparent"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        FontSize="16"/>
+            </Border>
 
         </VerticalStackLayout>
     </ScrollView>

@@ -4,17 +4,16 @@ using Microsoft.EntityFrameworkCore;
 using RutinApp.Shared.Data;
 using RutinApp.Shared.Models;
 using RutinApp.Views;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 namespace RutinApp.ViewModels
 {
     public partial class EjercicioViewModel : ObservableObject
     {
-        private readonly DataContext _dataContext;
+        private readonly IDbContextFactory<DataContext> _contextFactory;
+        private bool _esEdicion = false;
+        private int _ejercicioEditandoId = 0;
 
         [ObservableProperty]
         private ObservableCollection<EjercicioModel> _ejercicios = [];
@@ -33,26 +32,56 @@ namespace RutinApp.ViewModels
         [NotifyPropertyChangedFor(nameof(IsFormValid))]
         private bool _isNombreValid = true;
 
-        public bool IsFormValid => IsNombreValid;
 
-        public EjercicioViewModel(DataContext dataContext)
-        {
-            _dataContext = dataContext;
-        }
 
+        private bool _haInteractuado = false;
         partial void OnNombreChanged(string value)
         {
+            _haInteractuado = true;
             IsNombreValid = !string.IsNullOrWhiteSpace(value);
+            OnPropertyChanged(nameof(IsFormValid));
+        }
+        public bool IsFormValid => !_haInteractuado || (IsNombreValid && !string.IsNullOrWhiteSpace(Nombre));
+
+        
+        public EjercicioViewModel(IDbContextFactory<DataContext> contextFactory)
+        {
+            _contextFactory = contextFactory;
         }
 
         public async Task GetEjerciciosAsync()
         {
+            using var db = await _contextFactory.CreateDbContextAsync();
             Ejercicios.Clear();
-            var ejerciciosFromDb = await _dataContext.Ejercicios
-                .AsNoTracking()
-                .ToListAsync();
-            foreach (var ejercicio in ejerciciosFromDb)
-                Ejercicios.Add(ejercicio);
+            var lista = await db.Ejercicios.AsNoTracking().ToListAsync();
+            foreach (var e in lista) Ejercicios.Add(e);
+        }
+
+        public void LimpiarFormulario()
+        {
+            _haInteractuado = false;
+            _esEdicion = false;
+            _ejercicioEditandoId = 0;
+            _nombre = string.Empty;
+            OnPropertyChanged(nameof(Nombre));
+            _grupoMuscular = string.Empty;
+            OnPropertyChanged(nameof(GrupoMuscular));
+            _descripcion = string.Empty;
+            OnPropertyChanged(nameof(Descripcion));
+            IsNombreValid = true;
+        }
+
+        public void LoadEjercicioForEdicion(EjercicioModel ejercicio)
+        {
+            _esEdicion = true;
+            _ejercicioEditandoId = ejercicio.Id;
+            _nombre = ejercicio.Nombre;
+            OnPropertyChanged(nameof(Nombre));
+            _grupoMuscular = ejercicio.GrupoMuscular;
+            OnPropertyChanged(nameof(GrupoMuscular));
+            _descripcion = ejercicio.Descripcion;
+            OnPropertyChanged(nameof(Descripcion));
+            IsNombreValid = true;
         }
 
         [RelayCommand]
@@ -69,28 +98,53 @@ namespace RutinApp.ViewModels
         }
 
         [RelayCommand]
-        public async Task DeleteEjercicio(EjercicioModel ejercicio)
+        public async Task ShowOptions(EjercicioModel ejercicio)
         {
             string userAnswer = await Shell.Current.DisplayActionSheetAsync(
-                "¿Estás seguro de que quieres eliminar este ejercicio?",
-                "Cancelar", "Eliminar");
-            if (userAnswer == "Cancelar") return;
+                ejercicio.Nombre,
+                "Cancelar",
+                null,
+                "Editar",
+                "Eliminar");
 
-            _dataContext.Ejercicios.Remove(ejercicio);
-            await _dataContext.SaveChangesAsync();
+            if (userAnswer == "Editar")
+                await GoToEditPage(ejercicio);
+
+            if (userAnswer == "Eliminar")
+                await DeleteEjercicio(ejercicio);
+        }
+
+        [RelayCommand]
+        public async Task DeleteEjercicio(EjercicioModel ejercicio)
+        {
+            bool confirm = await Shell.Current.DisplayAlertAsync(
+                "Eliminar ejercicio",
+                $"¿Estás seguro de que quieres eliminar \"{ejercicio.Nombre}\"?",
+                "Eliminar", "Cancelar");
+            if (!confirm) return;
+
+            using var db = await _contextFactory.CreateDbContextAsync();
+            var toDelete = await db.Ejercicios.FindAsync(ejercicio.Id);
+            if (toDelete == null) return;
+            db.Ejercicios.Remove(toDelete);
+            await db.SaveChangesAsync();
             Ejercicios.Remove(ejercicio);
         }
 
         [RelayCommand]
         public async Task SaveEjercicio()
         {
-            var foundEjercicio = await _dataContext.Ejercicios
-                .FirstOrDefaultAsync(e => e.Nombre == this.Nombre);
+            if (string.IsNullOrWhiteSpace(Nombre)) return;
 
-            if (foundEjercicio != null)
+            if (_esEdicion)
             {
-                EditEjercicio(foundEjercicio);
-                await _dataContext.SaveChangesAsync();
+                using var db = await _contextFactory.CreateDbContextAsync();
+                var ejercicioToEdit = await db.Ejercicios.FindAsync(_ejercicioEditandoId);
+                if (ejercicioToEdit == null) return;
+                ejercicioToEdit.Nombre = Nombre;
+                ejercicioToEdit.GrupoMuscular = GrupoMuscular;
+                ejercicioToEdit.Descripcion = Descripcion;
+                await db.SaveChangesAsync();
                 await Shell.Current.DisplayAlertAsync("Éxito", "Ejercicio editado correctamente", "OK");
             }
             else
@@ -103,28 +157,14 @@ namespace RutinApp.ViewModels
 
         private async Task CreateEjercicio()
         {
-            var ejercicio = new EjercicioModel
+            using var db = await _contextFactory.CreateDbContextAsync();
+            db.Ejercicios.Add(new EjercicioModel
             {
-                Nombre = this.Nombre,
-                GrupoMuscular = this.GrupoMuscular,
-                Descripcion = this.Descripcion
-            };
-            _dataContext.Ejercicios.Add(ejercicio);
-            await _dataContext.SaveChangesAsync();
-        }
-
-        private void EditEjercicio(EjercicioModel ejercicio)
-        {
-            ejercicio.Nombre = this.Nombre;
-            ejercicio.GrupoMuscular = this.GrupoMuscular;
-            ejercicio.Descripcion = this.Descripcion;
-        }
-
-        public void LoadEjercicioForEdition(EjercicioModel ejercicio)
-        {
-            Nombre = ejercicio.Nombre;
-            GrupoMuscular = ejercicio.GrupoMuscular;
-            Descripcion = ejercicio.Descripcion;
+                Nombre = Nombre,
+                GrupoMuscular = GrupoMuscular,
+                Descripcion = Descripcion
+            });
+            await db.SaveChangesAsync();
         }
     }
 }
