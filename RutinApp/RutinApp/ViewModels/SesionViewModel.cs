@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using RutinApp.Shared.Data;
 using RutinApp.Shared.Models;
 using System.Collections.ObjectModel;
+using RutinApp.Models;
+using RutinApp.ViewModels;
 
 namespace RutinApp.ViewModels
 {
@@ -110,7 +112,6 @@ namespace RutinApp.ViewModels
 
             CargarEjercicioActual();
         }
-
         private async Task FinalizarSesion()
         {
             using var db = await _contextFactory.CreateDbContextAsync();
@@ -119,8 +120,9 @@ namespace RutinApp.ViewModels
             {
                 UsuarioId = 1,
                 Fecha = DateTime.Now,
-                Notas = string.Empty
+                Notas = NombreRutina // 🔥 AQUÍ guardas el nombre de la rutina
             };
+
             db.Historiales.Add(historial);
             await db.SaveChangesAsync();
 
