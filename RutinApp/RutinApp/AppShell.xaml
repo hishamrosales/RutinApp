@@ -9,13 +9,14 @@
     Title="RutinApp">
 
     <TabBar>
-        <Tab Title="Mis Rutinas" Icon="routine_icon.png">
-            <ShellContent
-                ContentTemplate="{DataTemplate views:MisRutinasPage}" />
+        <Tab Title="Mis Rutinas">
+            <ShellContent x:Name="MisRutinasPage"
+                      Route="MisRutinasPage"
+                      ContentTemplate="{DataTemplate views:MisRutinasPage}"/>
         </Tab>
-        <Tab Title="Ejercicios" Icon="exercise_icon.png">
-            <ShellContent
-                ContentTemplate="{DataTemplate views:EjerciciosPage}" />
+        <Tab Title="Ejercicios">
+            <ShellContent Route="EjerciciosPage"
+                      ContentTemplate="{DataTemplate views:EjerciciosPage}"/>
         </Tab>
     </TabBar>
 

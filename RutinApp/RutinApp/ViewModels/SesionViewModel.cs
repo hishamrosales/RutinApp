@@ -31,12 +31,13 @@ namespace RutinApp.ViewModels
         private int _ejercicioActualNumero = 1;
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(EsUltimoEjercicio))]
         private int _totalEjercicios = 0;
 
         [ObservableProperty]
         private double _progreso = 0;
 
-        public bool EsUltimoEjercicio => EjercicioActualNumero == TotalEjercicios;
+        public bool EsUltimoEjercicio => TotalEjercicios > 0 && EjercicioActualNumero == TotalEjercicios;
 
         public SesionViewModel(IDbContextFactory<DataContext> contextFactory)
         {
@@ -129,7 +130,7 @@ namespace RutinApp.ViewModels
                 $"Has completado tu rutina {NombreRutina}. ¡Buen trabajo!",
                 "OK");
 
-            await Shell.Current.GoToAsync("..");
+            await Shell.Current.GoToAsync("//MisRutinasPage");
         }
     }
 }

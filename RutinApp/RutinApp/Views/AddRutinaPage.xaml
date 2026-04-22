@@ -8,7 +8,7 @@
         <VerticalStackLayout Padding="24,52,24,24" Spacing="16">
 
             <!-- Header -->
-            <Label Text="Nueva Rutina"
+            <Label Text="Rutina"
                    FontSize="28"
                    FontAttributes="Bold"
                    TextColor="{StaticResource TextPrimary}"/>
