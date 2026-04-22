@@ -36,6 +36,9 @@ namespace RutinApp
             builder.Services.AddSingleton<SesionViewModel>();
             builder.Services.AddTransient<SesionPage>();
 
+            builder.Services.AddTransient<HistorialViewModel>();
+            builder.Services.AddTransient<HistorialPage>();
+
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
