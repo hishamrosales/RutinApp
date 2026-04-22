@@ -218,7 +218,7 @@ namespace RutinApp.ViewModels
         [RelayCommand]
         public async Task IniciarSesion(RutinaModel rutina)
         {
-            await Shell.Current.GoToAsync(nameof(SesionPage),
+            await Shell.Current.GoToAsync($"//MisRutinasPage/{nameof(SesionPage)}",
                 new Dictionary<string, object> { ["Rutina"] = rutina });
         }
     }
