@@ -1,3 +1,7 @@
 <Solution>
-  <Project Path="RutinApp/RutinApp.csproj" />
+  <Project Path="RutinApp.MigrationApp/RutinApp.MigrationApp.csproj" />
+  <Project Path="RutinApp.Shared/RutinApp.Shared.csproj" />
+  <Project Path="RutinApp/RutinApp.csproj">
+    <Deploy Solution="Debug|*" />
+  </Project>
 </Solution>

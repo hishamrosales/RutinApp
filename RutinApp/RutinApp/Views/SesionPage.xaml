@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:RutinApp.ViewModels"
+             x:Class="RutinApp.Views.SesionPage"
+             Title=""
+             BackgroundColor="{StaticResource AppBackground}">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="0">
+
+            <VerticalStackLayout Padding="24,52,24,16" Spacing="4">
+                <Label Text="{Binding NombreRutina}"
+                       FontSize="14"
+                       TextColor="{StaticResource TextSecondary}"/>
+                <Label Text="{Binding NombreEjercicioActual}"
+                       FontSize="26"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource TextPrimary}"/>
+                <Label Text="{Binding GrupoMuscularActual}"
+                       FontSize="13"
+                       TextColor="{StaticResource AccentOrange}"/>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Padding="24,0,24,16" Spacing="6">
+                <Grid ColumnDefinitions="*, Auto">
+                    <Label Grid.Column="0" Text="Progreso total"
+                           FontSize="12" TextColor="{StaticResource TextSecondary}"/>
+                    <Label Grid.Column="1" FontSize="12"
+                           TextColor="{StaticResource TextSecondary}">
+                        <Label.Text>
+                            <MultiBinding StringFormat="{}{0}/{1} ejercicios">
+                                <Binding Path="EjercicioActualNumero"/>
+                                <Binding Path="TotalEjercicios"/>
+                            </MultiBinding>
+                        </Label.Text>
+                    </Label>
+                </Grid>
+                <ProgressBar Progress="{Binding Progreso}"
+                             ProgressColor="{StaticResource AccentOrange}"
+                             BackgroundColor="{StaticResource CardBackground}"/>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Margin="24,0,24,16" Spacing="12"
+                                 BindableLayout.ItemsSource="{Binding Series}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Border Padding="16" StrokeThickness="0"
+                                BackgroundColor="{Binding Completada, Converter={StaticResource BoolToColorConverter}}">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="16"/>
+                            </Border.StrokeShape>
+                            <Grid ColumnDefinitions="Auto, *, *, Auto" ColumnSpacing="12">
+
+                                <Label Grid.Column="0"
+                                       Text="{Binding NumeroSerie, StringFormat='Serie {0}'}"
+                                       FontSize="14" FontAttributes="Bold"
+                                       TextColor="{StaticResource TextPrimary}"
+                                       VerticalOptions="Center"/>
+
+                                <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                    <Label Text="Peso (kg)" FontSize="11"
+                                           TextColor="{StaticResource TextSecondary}"/>
+                                    <Border BackgroundColor="#1C1C2E" StrokeThickness="0">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="8"/>
+                                        </Border.StrokeShape>
+                                        <Entry Text="{Binding PesoUtilizado}"
+                                               Keyboard="Numeric"
+                                               TextColor="{StaticResource TextPrimary}"
+                                               BackgroundColor="Transparent"
+                                               HorizontalTextAlignment="Center"
+                                               IsEnabled="{Binding Completada, Converter={StaticResource InvertedBoolConverter}}"/>
+                                    </Border>
+                                </VerticalStackLayout>
+
+                                <VerticalStackLayout Grid.Column="2" Spacing="2">
+                                    <Label Text="Reps" FontSize="11"
+                                           TextColor="{StaticResource TextSecondary}"/>
+                                    <Border BackgroundColor="#1C1C2E" StrokeThickness="0">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="8"/>
+                                        </Border.StrokeShape>
+                                        <Entry Text="{Binding RepsLogradas}"
+                                               Keyboard="Numeric"
+                                               TextColor="{StaticResource TextPrimary}"
+                                               BackgroundColor="Transparent"
+                                               HorizontalTextAlignment="Center"
+                                               IsEnabled="{Binding Completada, Converter={StaticResource InvertedBoolConverter}}"/>
+                                    </Border>
+                                </VerticalStackLayout>
+
+                                <Border Grid.Column="3" StrokeThickness="0"
+                                        BackgroundColor="{StaticResource AccentOrange}"
+                                        VerticalOptions="Center">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="8"/>
+                                    </Border.StrokeShape>
+                                    <Button Text="Done"
+                                            BackgroundColor="Transparent"
+                                            TextColor="White"
+                                            FontSize="13"
+                                            FontAttributes="Bold"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SesionViewModel}}, Path=MarcarSerieCompletadaCommand}"
+                                            CommandParameter="{Binding .}"
+                                            IsEnabled="True"/>
+                                </Border>
+
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+            <!-- Botón siguiente -->
+            <Button Margin="24,0,24,16"
+                    Text="Siguiente ejercicio →"
+                    Command="{Binding SiguienteEjercicioCommand}"
+                    BackgroundColor="{StaticResource AccentOrange}"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    CornerRadius="12"
+                    IsVisible="{Binding EsUltimoEjercicio, Converter={StaticResource InvertedBoolConverter}}"
+                    IsEnabled="True"/>
+
+            <!-- Botón finalizar -->
+            <Button Margin="24,0,24,32"
+                    Text="¡Finalizar sesión! 🎉"
+                    Command="{Binding SiguienteEjercicioCommand}"
+                    BackgroundColor="#2ECC71"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    CornerRadius="12"
+                    IsVisible="{Binding EsUltimoEjercicio}"
+                    IsEnabled="True"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
