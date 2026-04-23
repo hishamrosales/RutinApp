@@ -155,6 +155,16 @@ namespace RutinApp.ViewModels
 
             var seleccionados = EjerciciosDisponibles.Where(e => e.IsSelected).ToList();
 
+            if (!seleccionados.Any())
+            {
+                await Shell.Current.DisplayAlertAsync(
+                    "Error",
+                    "Debes seleccionar al menos un ejercicio",
+                    "OK"
+                );
+                return;
+            }
+
             if (_esEdicion)
             {
                 using var db = await _contextFactory.CreateDbContextAsync();
