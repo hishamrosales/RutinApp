@@ -32,7 +32,16 @@ namespace RutinApp.ViewModels
         [NotifyPropertyChangedFor(nameof(IsFormValid))]
         private bool _isNombreValid = true;
 
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(IsFormValid))]
+        private bool _isGrupoMuscularValid = true;
 
+        partial void OnGrupoMuscularChanged(string value)
+        {
+            _haInteractuado = true;
+            IsGrupoMuscularValid = !string.IsNullOrWhiteSpace(value);
+            OnPropertyChanged(nameof(IsFormValid));
+        }
 
         private bool _haInteractuado = false;
         partial void OnNombreChanged(string value)
@@ -41,9 +50,9 @@ namespace RutinApp.ViewModels
             IsNombreValid = !string.IsNullOrWhiteSpace(value);
             OnPropertyChanged(nameof(IsFormValid));
         }
-        public bool IsFormValid => !_haInteractuado || (IsNombreValid && !string.IsNullOrWhiteSpace(Nombre));
+        public bool IsFormValid => !_haInteractuado || (IsNombreValid && IsGrupoMuscularValid && !string.IsNullOrWhiteSpace(Nombre) && !string.IsNullOrWhiteSpace(GrupoMuscular));
 
-        
+
         public EjercicioViewModel(IDbContextFactory<DataContext> contextFactory)
         {
             _contextFactory = contextFactory;
@@ -134,7 +143,16 @@ namespace RutinApp.ViewModels
         [RelayCommand]
         public async Task SaveEjercicio()
         {
-            if (string.IsNullOrWhiteSpace(Nombre)) return;
+            _haInteractuado = true;
+
+            IsNombreValid = !string.IsNullOrWhiteSpace(Nombre);
+            IsGrupoMuscularValid = !string.IsNullOrWhiteSpace(GrupoMuscular);
+
+            OnPropertyChanged(nameof(IsNombreValid));
+            OnPropertyChanged(nameof(IsGrupoMuscularValid));
+            OnPropertyChanged(nameof(IsFormValid));
+
+            if (!IsNombreValid || !IsGrupoMuscularValid) return;
 
             if (_esEdicion)
             {

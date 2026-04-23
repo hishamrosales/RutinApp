@@ -151,7 +151,16 @@ namespace RutinApp.ViewModels
         [RelayCommand]
         public async Task SaveRutina()
         {
-            if (string.IsNullOrWhiteSpace(NombreRutina)) return;
+            if (string.IsNullOrWhiteSpace(NombreRutina))
+            {
+                _haInteractuado = true; // 🔥 fuerza validación visual
+                IsNombreValid = false;
+
+                OnPropertyChanged(nameof(IsNombreValid));
+                OnPropertyChanged(nameof(IsFormValid));
+
+                return;
+            }
 
             var seleccionados = EjerciciosDisponibles.Where(e => e.IsSelected).ToList();
 

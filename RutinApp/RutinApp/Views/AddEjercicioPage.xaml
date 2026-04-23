@@ -51,7 +51,11 @@
                            TextColor="{StaticResource TextPrimary}"
                            BackgroundColor="Transparent"/>
         </Border>
-    </VerticalStackLayout>
+        <Label Text="El grupo muscular es requerido"
+                       TextColor="#C0392B"
+                       FontSize="12"
+                       IsVisible="{Binding IsGrupoMuscularValid, Converter={StaticResource InvertedBoolConverter}}"/>
+            </VerticalStackLayout>
 
     <!-- Descripción -->
     <VerticalStackLayout Spacing="6">
