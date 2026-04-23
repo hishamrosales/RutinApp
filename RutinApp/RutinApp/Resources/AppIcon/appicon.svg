@@ -1,4 +1,49 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="456" height="456" viewBox="0 0 456 456" version="1.1" xmlns="http://www.w3.org/2000/svg">
-    <rect x="0" y="0" width="456" height="456" fill="#512BD4" />
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+
+  <!-- Gradiente -->
+
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2E1A87"/>
+      <stop offset="100%" stop-color="#FF4C1E"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Fondo redondeado -->
+
+  <rect x="0" y="0" width="1024" height="1024" rx="220" fill="url(#bg)"/>
+
+  <!-- Brazo (simplificado estilo original) -->
+
+<path d="M300 650 
+        Q330 500 480 420 
+        Q540 390 600 430 
+        Q630 450 650 500 
+        L600 540 
+        Q580 500 530 500 
+        Q460 520 420 680 
+        Q400 750 350 720 
+        Q300 690 300 650 Z"
+     fill="white"/>
+
+  <!-- Flecha / gráfica -->
+
+<polyline points="350,720 500,580 600,670 750,520"
+         fill="none"
+         stroke="white"
+         stroke-width="45"
+         stroke-linecap="round"
+         stroke-linejoin="round"/>
+
+  <!-- Punta de flecha -->
+
+  <polygon points="750,520 700,540 770,580" fill="white"/>
+
+  <!-- Barras -->
+
+  <rect x="380" y="740" width="90" height="120" rx="20" fill="white"/>
+  <rect x="510" y="690" width="90" height="170" rx="20" fill="white"/>
+  <rect x="640" y="630" width="90" height="230" rx="20" fill="white"/>
+
 </svg>
