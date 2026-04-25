@@ -18,6 +18,11 @@
             <ShellContent Route="EjerciciosPage"
                       ContentTemplate="{DataTemplate views:EjerciciosPage}"/>
         </Tab>
+        <Tab Title="Historial" Icon="exercise_icon.png">
+            <ShellContent
+            ContentTemplate="{DataTemplate views:HistorialPage}" />
+        </Tab>
+
     </TabBar>
 
 </Shell>
