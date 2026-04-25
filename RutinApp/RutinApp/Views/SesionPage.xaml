@@ -114,7 +114,7 @@
 
             <!-- Botón siguiente -->
             <Button Margin="24,0,24,16"
-                    Text="Siguiente ejercicio →"
+                    Text="Siguiente ejercicio ->"
                     Command="{Binding SiguienteEjercicioCommand}"
                     BackgroundColor="{StaticResource AccentOrange}"
                     TextColor="White"
@@ -126,7 +126,7 @@
 
             <!-- Botón finalizar -->
             <Button Margin="24,0,24,32"
-                    Text="¡Finalizar sesión! 🎉"
+                    Text="¡Finalizar sesión!"
                     Command="{Binding SiguienteEjercicioCommand}"
                     BackgroundColor="#2ECC71"
                     TextColor="White"
