@@ -7,7 +7,6 @@
              BackgroundColor="{StaticResource AppBackground}">
     <Grid RowDefinitions="Auto, Auto, *">
 
-        <!-- Header -->
         <Grid Grid.Row="0" Padding="24,52,24,8" ColumnDefinitions="*, Auto">
             <Label Grid.Column="0"
                    Text="Ejercicios"
@@ -23,7 +22,6 @@
                     VerticalOptions="Center"/>
         </Grid>
 
-        <!-- Buscador -->
         <Border Grid.Row="1"
                 Margin="24,0,24,16"
                 BackgroundColor="{StaticResource CardBackground}"
@@ -37,7 +35,6 @@
                        BackgroundColor="Transparent"/>
         </Border>
 
-        <!-- Lista de ejercicios -->
         <CollectionView Grid.Row="2"
                         ItemsSource="{Binding Ejercicios}"
                         Margin="24,0,24,0">

@@ -7,13 +7,11 @@
     <ScrollView>
         <VerticalStackLayout Padding="24,52,24,24" Spacing="16">
 
-    <!-- Header -->
     <Label Text="Nuevo Ejercicio"
                    FontSize="28"
                    FontAttributes="Bold"
                    TextColor="{StaticResource TextPrimary}"/>
 
-    <!-- Nombre -->
     <VerticalStackLayout Spacing="6">
         <Label Text="Nombre"
                        FontSize="13"
@@ -35,7 +33,6 @@
                        IsVisible="{Binding IsNombreValid, Converter={StaticResource InvertedBoolConverter}}"/>
     </VerticalStackLayout>
 
-    <!-- Grupo Muscular -->
     <VerticalStackLayout Spacing="6">
         <Label Text="Grupo Muscular"
                        FontSize="13"
@@ -57,7 +54,6 @@
                        IsVisible="{Binding IsGrupoMuscularValid, Converter={StaticResource InvertedBoolConverter}}"/>
             </VerticalStackLayout>
 
-    <!-- Descripción -->
     <VerticalStackLayout Spacing="6">
         <Label Text="Descripción"
                        FontSize="13"
@@ -76,7 +72,6 @@
         </Border>
     </VerticalStackLayout>
 
-    <!-- Botón Guardar -->
     <Border Margin="0,8,0,0"
                     StrokeThickness="0">
         <Border.StrokeShape>

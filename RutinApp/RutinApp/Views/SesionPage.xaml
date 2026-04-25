@@ -112,23 +112,22 @@
                 </BindableLayout.ItemTemplate>
             </VerticalStackLayout>
 
-            <!-- Botón siguiente -->
             <Button Margin="24,0,24,16"
                     Text="Siguiente ejercicio ->"
                     Command="{Binding SiguienteEjercicioCommand}"
-                    BackgroundColor="{StaticResource AccentOrange}"
+                    BackgroundColor="#c9640c"
                     TextColor="White"
                     FontAttributes="Bold"
                     FontSize="16"
                     CornerRadius="12"
                     IsVisible="{Binding EsUltimoEjercicio, Converter={StaticResource InvertedBoolConverter}}"
                     IsEnabled="True"/>
-
-            <!-- Botón finalizar -->
+            
+            
             <Button Margin="24,0,24,32"
                     Text="¡Finalizar sesión!"
                     Command="{Binding SiguienteEjercicioCommand}"
-                    BackgroundColor="#2ECC71"
+                    BackgroundColor="#0b7327"
                     TextColor="White"
                     FontAttributes="Bold"
                     FontSize="16"

@@ -121,7 +121,7 @@ namespace RutinApp.ViewModels
             {
                 UsuarioId = 1,
                 Fecha = DateTime.Now,
-                Notas = NombreRutina // 🔥 AQUÍ guardas el nombre de la rutina
+                Notas = NombreRutina 
             };
 
             db.Historiales.Add(historial);

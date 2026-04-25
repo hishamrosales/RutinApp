@@ -51,7 +51,6 @@ namespace RutinApp
                 using var db = factory.CreateDbContext();
                 db.Database.Migrate();
 
-                // Crear usuario por defecto si no existe
                 if (!db.Usuarios.Any())
                 {
                     db.Usuarios.Add(new UsuarioModel

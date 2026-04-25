@@ -153,7 +153,7 @@ namespace RutinApp.ViewModels
         {
             if (string.IsNullOrWhiteSpace(NombreRutina))
             {
-                _haInteractuado = true; // 🔥 fuerza validación visual
+                _haInteractuado = true;
                 IsNombreValid = false;
 
                 OnPropertyChanged(nameof(IsNombreValid));
