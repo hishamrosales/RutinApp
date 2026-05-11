@@ -12,7 +12,6 @@
             </ResourceDictionary.MergedDictionaries>
 
             <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
-            <converters:BoolToOpacityConverter x:Key="BoolToOpacityConverter"/>
             <converters:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
             
         </ResourceDictionary>
