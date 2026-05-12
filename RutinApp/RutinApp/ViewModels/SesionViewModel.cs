@@ -1,20 +1,23 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.EntityFrameworkCore;
+using RutinApp.Models;
 using RutinApp.Shared.Data;
 using RutinApp.Shared.Models;
+using RutinApp.Views;
 using System.Collections.ObjectModel;
-using RutinApp.Models;
-using RutinApp.ViewModels;
 
 namespace RutinApp.ViewModels
 {
     public partial class SesionViewModel : ObservableObject
     {
         private readonly IDbContextFactory<DataContext> _contextFactory;
-        private RutinaModel _rutina;
+        private readonly RutinaViewModel _rutinaViewModel;
         private List<RutinaDetalleModel> _ejerciciosRutina = [];
         private int _ejercicioActualIndex = 0;
+
+        [ObservableProperty]
+        private RutinaUIModel? _rutinaActiva;
 
         [ObservableProperty]
         private string _nombreRutina = string.Empty;
@@ -41,14 +44,14 @@ namespace RutinApp.ViewModels
 
         public bool EsUltimoEjercicio => TotalEjercicios > 0 && EjercicioActualNumero == TotalEjercicios;
 
-        public SesionViewModel(IDbContextFactory<DataContext> contextFactory)
+        public SesionViewModel(IDbContextFactory<DataContext> contextFactory, RutinaViewModel rutinaViewModel)
         {
             _contextFactory = contextFactory;
+            _rutinaViewModel = rutinaViewModel;
         }
 
         public async Task IniciarSesion(RutinaModel rutina)
         {
-            _rutina = rutina;
             NombreRutina = rutina.NombreRutina;
             _ejercicioActualIndex = 0;
 
@@ -60,6 +63,11 @@ namespace RutinApp.ViewModels
                 .ToListAsync();
 
             TotalEjercicios = _ejerciciosRutina.Count;
+
+            // Resetear el círculo de progreso al iniciar
+            if (_rutinaViewModel.RutinaActiva != null)
+                _rutinaViewModel.RutinaActiva.ProgresoSesion = 0;
+
             CargarEjercicioActual();
         }
 
@@ -71,7 +79,16 @@ namespace RutinApp.ViewModels
             NombreEjercicioActual = detalle.Ejercicio?.Nombre ?? string.Empty;
             GrupoMuscularActual = detalle.Ejercicio?.GrupoMuscular ?? string.Empty;
             EjercicioActualNumero = _ejercicioActualIndex + 1;
-            Progreso = (double)_ejercicioActualIndex / TotalEjercicios;
+
+            double progresoActual = TotalEjercicios > 0
+                ? (double)_ejercicioActualIndex / TotalEjercicios
+                : 0;
+
+            Progreso = progresoActual;
+
+            // Actualiza el círculo de la tarjeta en MisRutinas
+            if (_rutinaViewModel.RutinaActiva != null)
+                _rutinaViewModel.RutinaActiva.ProgresoSesion = progresoActual;
 
             Series.Clear();
             for (int i = 1; i <= detalle.Series; i++)
@@ -107,12 +124,17 @@ namespace RutinApp.ViewModels
 
             if (_ejercicioActualIndex >= _ejerciciosRutina.Count)
             {
+                // Sesión terminada: círculo al 100%
+                if (_rutinaViewModel.RutinaActiva != null)
+                    _rutinaViewModel.RutinaActiva.ProgresoSesion = 1.0;
+
                 await FinalizarSesion();
                 return;
             }
 
             CargarEjercicioActual();
         }
+
         private async Task FinalizarSesion()
         {
             using var db = await _contextFactory.CreateDbContextAsync();
@@ -121,7 +143,7 @@ namespace RutinApp.ViewModels
             {
                 UsuarioId = 1,
                 Fecha = DateTime.Now,
-                Notas = NombreRutina 
+                Notas = NombreRutina
             };
 
             db.Historiales.Add(historial);

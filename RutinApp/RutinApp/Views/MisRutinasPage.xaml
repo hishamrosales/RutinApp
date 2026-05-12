@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:RutinApp.ViewModels"
+             xmlns:controls="clr-namespace:RutinApp.Controls"
              x:Class="RutinApp.Views.MisRutinasPage"
              Title="Mis Rutinas"
              BackgroundColor="{StaticResource AppBackground}">
@@ -75,26 +76,13 @@
                                    TextColor="{StaticResource TextPrimary}"
                                    LineBreakMode="TailTruncation"/>
 
-                            <Grid HorizontalOptions="Center"
-                                  WidthRequest="70"
-                                  HeightRequest="70">
-                                <Ellipse WidthRequest="70"
-                                         HeightRequest="70"
-                                         Stroke="{StaticResource CardBackground}"
-                                         StrokeThickness="6"
-                                         Fill="Transparent"/>
-                                <Ellipse WidthRequest="70"
-                                         HeightRequest="70"
-                                         Stroke="{StaticResource AccentOrange}"
-                                         StrokeThickness="6"
-                                         Fill="Transparent"/>
-                                <Label Text="0%"
-                                       TextColor="{StaticResource TextPrimary}"
-                                       FontAttributes="Bold"
-                                       FontSize="16"
-                                       HorizontalOptions="Center"
-                                       VerticalOptions="Center"/>
-                            </Grid>
+                            <!-- Círculo de progreso dinámico -->
+                            <controls:CirculoProgreso
+                                Progreso="{Binding ProgresoSesion}"
+                                Texto="{Binding PorcentajeSesionTexto}"
+                                WidthRequest="70"
+                                HeightRequest="70"
+                                HorizontalOptions="Center"/>
 
                             <Label Text="{Binding RutinaEjercicios.Count, StringFormat='{0} ejercicios'}"
                                    FontSize="12"
