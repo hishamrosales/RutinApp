@@ -5,6 +5,7 @@ using RutinApp.Shared.Data;
 using RutinApp.Shared.Models;
 using RutinApp.Views;
 using System.Collections.ObjectModel;
+using RutinApp.Models;
 
 namespace RutinApp.ViewModels
 {
@@ -15,7 +16,7 @@ namespace RutinApp.ViewModels
         private int _rutinaEditandoId = 0;
 
         [ObservableProperty]
-        private ObservableCollection<RutinaModel> _rutinas = [];
+        private ObservableCollection<RutinaUIModel> _rutinas = [];
 
         [ObservableProperty]
         private ObservableCollection<EjercicioSeleccionModel> _ejerciciosDisponibles = [];
@@ -53,7 +54,7 @@ namespace RutinApp.ViewModels
                 .AsNoTracking()
                 .Include(r => r.RutinaEjercicios)
                 .ToListAsync();
-            foreach (var r in lista) Rutinas.Add(r);
+            foreach (var r in lista) Rutinas.Add(new RutinaUIModel(r));
         }
 
         public async Task GetEjerciciosDisponiblesAsync()
@@ -108,14 +109,14 @@ namespace RutinApp.ViewModels
         }
 
         [RelayCommand]
-        public async Task GoToEditPage(RutinaModel rutina)
+        public async Task GoToEditPage(RutinaUIModel rutina)
         {
             await Shell.Current.GoToAsync(nameof(AddRutinaPage),
                 new Dictionary<string, object> { ["Rutina"] = rutina });
         }
 
         [RelayCommand]
-        public async Task ShowOptions(RutinaModel rutina)
+        public async Task ShowOptions(RutinaUIModel rutina)
         {
             string userAnswer = await Shell.Current.DisplayActionSheetAsync(
                 rutina.NombreRutina,
@@ -132,7 +133,7 @@ namespace RutinApp.ViewModels
         }
 
         [RelayCommand]
-        public async Task DeleteRutina(RutinaModel rutina)
+        public async Task DeleteRutina(RutinaUIModel rutina)
         {
             bool confirm = await Shell.Current.DisplayAlertAsync(
                 "Eliminar rutina",
@@ -216,7 +217,7 @@ namespace RutinApp.ViewModels
         }
 
         [RelayCommand]
-        public async Task IniciarSesion(RutinaModel rutina)
+        public async Task IniciarSesion(RutinaUIModel rutina)
         {
             await Shell.Current.GoToAsync(nameof(SesionPage),
                 new Dictionary<string, object> { ["Rutina"] = rutina });

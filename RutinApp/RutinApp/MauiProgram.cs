@@ -28,6 +28,7 @@ namespace RutinApp
             builder.Services.AddSingleton<EjercicioViewModel>();
             builder.Services.AddSingleton<RutinaViewModel>();
 
+
             builder.Services.AddTransient<EjerciciosPage>();
             builder.Services.AddTransient<AddEjercicioPage>();
             builder.Services.AddTransient<MisRutinasPage>();

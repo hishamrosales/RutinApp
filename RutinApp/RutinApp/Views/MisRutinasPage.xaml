@@ -2,13 +2,13 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:RutinApp.ViewModels"
+             xmlns:controls="clr-namespace:RutinApp.Controls"
              x:Class="RutinApp.Views.MisRutinasPage"
              Title="Mis Rutinas"
              BackgroundColor="{StaticResource AppBackground}">
 
     <Grid RowDefinitions="Auto, Auto, *">
 
-        <!-- Header -->
         <Grid Grid.Row="0" Padding="24,52,24,8" ColumnDefinitions="*, Auto">
             <VerticalStackLayout Grid.Column="0">
                 <Label Text="Mis Rutinas"
@@ -25,7 +25,6 @@
                     VerticalOptions="Center"/>
         </Grid>
 
-        <!-- Buscador -->
         <Border Grid.Row="1"
                 Margin="24,0,24,16"
                 BackgroundColor="{StaticResource CardBackground}"
@@ -39,7 +38,6 @@
                        BackgroundColor="Transparent"/>
         </Border>
 
-        <!-- Grid de Rutinas -->
         <CollectionView Grid.Row="2"
                         ItemsSource="{Binding Rutinas}"
                         Margin="24,0">
@@ -78,27 +76,13 @@
                                    TextColor="{StaticResource TextPrimary}"
                                    LineBreakMode="TailTruncation"/>
 
-                            <!-- Círculo de progreso -->
-                            <Grid HorizontalOptions="Center"
-                                  WidthRequest="70"
-                                  HeightRequest="70">
-                                <Ellipse WidthRequest="70"
-                                         HeightRequest="70"
-                                         Stroke="{StaticResource CardBackground}"
-                                         StrokeThickness="6"
-                                         Fill="Transparent"/>
-                                <Ellipse WidthRequest="70"
-                                         HeightRequest="70"
-                                         Stroke="{StaticResource AccentOrange}"
-                                         StrokeThickness="6"
-                                         Fill="Transparent"/>
-                                <Label Text="0%"
-                                       TextColor="{StaticResource TextPrimary}"
-                                       FontAttributes="Bold"
-                                       FontSize="16"
-                                       HorizontalOptions="Center"
-                                       VerticalOptions="Center"/>
-                            </Grid>
+                            <!-- Círculo de progreso dinámico -->
+                            <controls:CirculoProgreso
+                                Progreso="{Binding ProgresoSesion}"
+                                Texto="{Binding PorcentajeSesionTexto}"
+                                WidthRequest="70"
+                                HeightRequest="70"
+                                HorizontalOptions="Center"/>
 
                             <Label Text="{Binding RutinaEjercicios.Count, StringFormat='{0} ejercicios'}"
                                    FontSize="12"
@@ -109,7 +93,6 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
 
-            <!-- Tarjeta para crear nueva rutina -->
             <CollectionView.Footer>
                 <Grid ColumnDefinitions="*, *" ColumnSpacing="12" Margin="0,12,0,24">
                     <Border Grid.Column="0"
