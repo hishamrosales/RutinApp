@@ -17,6 +17,9 @@ namespace RutinApp.ViewModels
         private int _ejercicioActualIndex = 0;
 
         [ObservableProperty]
+        private RutinaUIModel? _rutinaActiva;
+
+        [ObservableProperty]
         private string _nombreRutina = string.Empty;
 
         [ObservableProperty]

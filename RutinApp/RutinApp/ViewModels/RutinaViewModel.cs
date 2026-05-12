@@ -41,6 +41,8 @@ namespace RutinApp.ViewModels
 
         public bool IsFormValid => !_haInteractuado || (IsNombreValid && !string.IsNullOrWhiteSpace(NombreRutina));
 
+        public RutinaUIModel RutinaActiva { get; private set; }
+
         public RutinaViewModel(IDbContextFactory<DataContext> contextFactory)
         {
             _contextFactory = contextFactory;
@@ -107,12 +109,11 @@ namespace RutinApp.ViewModels
         {
             await Shell.Current.GoToAsync(nameof(AddRutinaPage));
         }
-
         [RelayCommand]
         public async Task GoToEditPage(RutinaUIModel rutina)
         {
             await Shell.Current.GoToAsync(nameof(AddRutinaPage),
-                new Dictionary<string, object> { ["Rutina"] = rutina });
+                new Dictionary<string, object> { ["Rutina"] = rutina.Rutina }); 
         }
 
         [RelayCommand]
@@ -215,12 +216,14 @@ namespace RutinApp.ViewModels
 
             await Shell.Current.GoToAsync("..");
         }
+        
 
         [RelayCommand]
         public async Task IniciarSesion(RutinaUIModel rutina)
         {
+            RutinaActiva = rutina; // si ya agregaste esta propiedad
             await Shell.Current.GoToAsync(nameof(SesionPage),
-                new Dictionary<string, object> { ["Rutina"] = rutina });
+                new Dictionary<string, object> { ["Rutina"] = rutina.Rutina }); // ✅ RutinaModel
         }
     }
 }
