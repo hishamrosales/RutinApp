@@ -153,9 +153,28 @@ namespace RutinApp.ViewModels
         [RelayCommand]
         public async Task SaveRutina()
         {
-            if (string.IsNullOrWhiteSpace(NombreRutina)) return;
+            if (string.IsNullOrWhiteSpace(NombreRutina))
+            {
+                _haInteractuado = true;
+                IsNombreValid = false;
+
+                OnPropertyChanged(nameof(IsNombreValid));
+                OnPropertyChanged(nameof(IsFormValid));
+
+                return;
+            }
 
             var seleccionados = EjerciciosDisponibles.Where(e => e.IsSelected).ToList();
+
+            if (!seleccionados.Any())
+            {
+                await Shell.Current.DisplayAlertAsync(
+                    "Error",
+                    "Debes seleccionar al menos un ejercicio",
+                    "OK"
+                );
+                return;
+            }
 
             if (_esEdicion)
             {

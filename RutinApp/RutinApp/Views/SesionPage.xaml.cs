@@ -7,6 +7,7 @@ namespace RutinApp.Views
     public partial class SesionPage : ContentPage
     {
         private readonly SesionViewModel _sesionViewModel;
+        private RutinaModel _rutinaPendiente;
 
         public SesionPage(SesionViewModel sesionViewModel)
         {
@@ -20,8 +21,20 @@ namespace RutinApp.Views
             set
             {
                 if (value != null)
-                    _sesionViewModel.IniciarSesion(value);
+                    _rutinaPendiente = value;
             }
         }
+
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+            if (_rutinaPendiente != null)
+            {
+                await _sesionViewModel.IniciarSesion(_rutinaPendiente);
+                _rutinaPendiente = null;
+            }
+        }
+
+
     }
 }

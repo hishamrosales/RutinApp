@@ -7,13 +7,11 @@
     <ScrollView>
         <VerticalStackLayout Padding="24,52,24,24" Spacing="16">
 
-            <!-- Header -->
-            <Label Text="Nueva Rutina"
+            <Label Text="Rutina"
                    FontSize="28"
                    FontAttributes="Bold"
                    TextColor="{StaticResource TextPrimary}"/>
 
-            <!-- Nombre -->
             <VerticalStackLayout Spacing="6">
                 <Label Text="Nombre de la Rutina"
                        FontSize="13"
@@ -35,7 +33,6 @@
                        IsVisible="{Binding IsNombreValid, Converter={StaticResource InvertedBoolConverter}}"/>
             </VerticalStackLayout>
 
-            <!-- Ejercicios disponibles -->
             <Label Text="Selecciona los ejercicios"
                    FontSize="16"
                    FontAttributes="Bold"
@@ -54,7 +51,6 @@
 
                             <VerticalStackLayout Spacing="10">
 
-                                <!-- Fila selección -->
                                 <Grid ColumnDefinitions="*, Auto">
                                     <VerticalStackLayout Grid.Column="0" Spacing="2">
                                         <Label Text="{Binding Ejercicio.Nombre}"
@@ -70,7 +66,6 @@
                                               Color="{StaticResource AccentOrange}"/>
                                 </Grid>
 
-                                <!-- Series y Reps (solo si está seleccionado) -->
                                 <Grid ColumnDefinitions="*, *"
                                       ColumnSpacing="12"
                                       IsVisible="{Binding IsSelected}">
@@ -114,7 +109,6 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-            <!-- Botón Guardar -->
             <Border Margin="0,8,0,0" StrokeThickness="0">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="12"/>

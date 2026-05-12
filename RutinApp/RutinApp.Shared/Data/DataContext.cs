@@ -50,7 +50,7 @@ namespace RutinApp.Shared.Data
                 entity.Property(e => e.NombreRutina).IsRequired().HasMaxLength(100);
             });
 
-            // Llave compuesta para la tabla intermedia
+
             modelBuilder.Entity<RutinaDetalleModel>(entity =>
             {
                 entity.HasKey(e => new { e.RutinaId, e.EjercicioId });

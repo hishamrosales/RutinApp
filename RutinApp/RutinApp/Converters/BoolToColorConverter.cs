@@ -7,8 +7,8 @@ namespace RutinApp.Converters
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             if (value is bool completada && completada)
-                return Color.FromArgb("#1A3A2A"); // verde oscuro
-            return Color.FromArgb("#2A2A3E"); // CardBackground
+                return Color.FromArgb("#1A3A2A"); 
+            return Color.FromArgb("#2A2A3E");
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
