@@ -17,6 +17,7 @@ CommunityToolkit.MVVM
 MVVM (Model-View-ViewModel)
 XAML
 Git & GitHub
+
 🧩 Arquitectura Implementada
 
 El proyecto sigue el patrón de arquitectura MVVM, separando claramente:
@@ -34,6 +35,7 @@ para implementar:
 Propiedades observables
 Comandos
 Notificación automática de cambios
+
 💾 Persistencia de Datos
 
 La aplicación utiliza:
@@ -48,19 +50,24 @@ Crear registros
 Consultar información
 Actualizar datos
 Eliminar registros
+
 ✨ Funcionalidades Principales
+
 📌 Gestión de ejercicios
 Agregar ejercicios
 Editar ejercicios
 Eliminar ejercicios
 Visualizar lista de ejercicios
+
 📌 Gestión de rutinas
 Crear rutinas
 Asociar ejercicios
 Editar rutinas
 Eliminar rutinas
+
 📌 Persistencia local
 Almacenamiento permanente en SQLite
+
 📂 Estructura del Proyecto
 RutinApp/
 │
@@ -72,22 +79,24 @@ RutinApp/
 ├── Migrations/
 ├── Resources/
 └── Platforms/
+
 ⚙️ Instalación y Ejecución
+
 1. Clonar repositorio
 git clone https://github.com/TU-USUARIO/RutinApp.git
+
 2. Abrir solución
-
 Abrir el archivo .sln en:
-
 Visual Studio 2022 o superior
+
 3. Restaurar paquetes NuGet
 dotnet restore
+
 4. Ejecutar migraciones (si aplica)
 dotnet ef database update
+
 5. Ejecutar proyecto
-
 Seleccionar:
-
 Android Emulator
 Windows Machine
 Dispositivo físico
