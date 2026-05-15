@@ -1,4 +1,9 @@
-﻿namespace RutinApp.Models
+﻿/// <summary>
+/// Autores: Hisham Rosales, Debanhi Librado, Jesus Guerrero
+/// Fecha: 15/05/2026
+/// Versión: 1.5
+/// </summary>
+namespace RutinApp.Models
 {
     /// <summary>
     /// Modelo utilizado para representar un elemento

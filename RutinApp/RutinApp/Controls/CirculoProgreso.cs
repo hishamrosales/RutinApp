@@ -1,3 +1,8 @@
+/// <summary>
+/// Autores: Hisham Rosales, Debanhi Librado, Jesus Guerrero
+/// Fecha: 15/05/2026
+/// Versión: 1.1
+/// </summary>
 namespace RutinApp.Controls
 {
     /// <summary>

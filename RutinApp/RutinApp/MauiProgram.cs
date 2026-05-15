@@ -5,6 +5,11 @@ using RutinApp.Shared.Models;
 using RutinApp.ViewModels;
 using RutinApp.Views;
 
+/// <summary>
+/// Autores: Hisham Rosales, Debanhi Librado, Jesus Guerrero
+/// Fecha: 15/05/2026
+/// Versión: 1.2
+/// </summary>
 namespace RutinApp
 {
     /// <summary>

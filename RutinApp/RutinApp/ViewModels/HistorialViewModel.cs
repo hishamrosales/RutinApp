@@ -4,6 +4,11 @@ using RutinApp.Models;
 using RutinApp.Shared.Data;
 using System.Collections.ObjectModel;
 
+/// <summary>
+/// Autores: Hisham Rosales, Debanhi Librado, Jesus Guerrero
+/// Fecha: 15/05/2026
+/// Versión: 1.5
+/// </summary>
 namespace RutinApp.ViewModels
 {
     /// <summary>

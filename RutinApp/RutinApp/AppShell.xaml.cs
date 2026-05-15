@@ -1,4 +1,9 @@
-﻿namespace RutinApp
+﻿/// <summary>
+/// Autores: Hisham Rosales, Debanhi Librado, Jesus Guerrero
+/// Fecha: 15/05/2026
+/// Versión: 1.2
+/// </summary>
+namespace RutinApp
 {
     /// <summary>
     /// Clase principal de navegación de la aplicación.

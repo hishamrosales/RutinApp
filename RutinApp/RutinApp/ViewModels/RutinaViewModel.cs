@@ -7,6 +7,11 @@ using RutinApp.Views;
 using System.Collections.ObjectModel;
 using RutinApp.Models;
 
+/// <summary>
+/// Autores: Hisham Rosales, Debanhi Librado, Jesus Guerrero
+/// Fecha: 15/05/2026
+/// Versión: 1.8
+/// </summary>
 namespace RutinApp.ViewModels
 {
     /// <summary>
